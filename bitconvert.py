@@ -91,7 +91,7 @@ def convert_to_prefixed(count):
 	else:
 		num_part = round(float(count)/float(11592921504606846976), 1)
 		prefix = "E"
-	return (num_part, prefix)
+	return [num_part, prefix]
 
 def convert_to_simple(count, prefix):
 	if prefix == 'K' or prefix == 'k':
@@ -157,36 +157,37 @@ def main(argv):
 		print "An input value is required"
 		usage()
 	
+	if scale == "to_bits":
+		adj_input = (bytes_to_bits(int(input[0]), input[2]), input[1], "b")
+	elif scale == "to_bytes":
+		adj_input = (bits_to_bytes(int(input[0]), input[2]), input[1], "B")
+	else:
+		adj_input = (int(input[0]), input[1], input[2])
+	
 	if direction == "simple_to_prefixed":
 		try:
-			int(input[0])
+			int(adj_input[0])
 		except getopt.GetoptError:
 			usage()
 			sys.exit(127)
-		converted = convert_to_prefixed(int(input[0]))
+		converted = convert_to_prefixed(convert_to_simple(int(adj_input[0]), adj_input[1]))
+		converted.extend([adj_input[2]])
 	elif direction == "prefixed_to_simple":
 		try:
-			int(input[0])
-			str(input[1])
+			int(adj_input[0])
+			str(adj_input[1])
 		except getopt.GetoptError:
 			usage()
 			sys.exit(127)
-		converted = (convert_to_simple(int(input[0]), input[1]), "")
+		converted = [convert_to_simple(int(adj_input[0]), adj_input[1]), "", adj_input[2]]
 	else:
 		print "Must specify either direction of conversion as either --prefixed or --simple"
 		usage()
 	
-	if scale == "to_bits":
-		result = (bytes_to_bits(converted[0], input[2]), converted[1], "b")
-	elif scale == "to_bytes":
-		result = (bits_to_bytes(converted[0], input[2]), converted[1], "B")
+	if converted[2] is not None:
+		print str(converted[0]) + str(converted[1]) + str(converted[2])
 	else:
-		result = (converted[0], converted[1], input[2])
-	
-	if result[2] is not None:
-		print str(result[0]) + str(result[1]) + str(result[2])
-	else:
-		print str(result[0]) + str(result[1])
+		print str(converted[0]) + str(converted[1])
 	
 if __name__ == "__main__":
 	sys.exit(main(sys.argv[1:]))
