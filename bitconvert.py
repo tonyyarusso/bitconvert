@@ -40,7 +40,7 @@
 
 import getopt, re, sys
 
-bitpattern = re.compile(r'^(\d*\.?\d+)(K|k|M|m|G|g|T|t|P|p|E|e)?$')
+bitpattern = re.compile(r'^(\d*\.?\d+)(K|k|M|m|G|g|T|t|P|p|E|e)?(b|B)?$')
 
 def usage():
 	print "Name:         Basic bit/byte converter"
@@ -107,10 +107,25 @@ def convert_to_simple(count, prefix):
 		sys.exit(1)
 	return int(bits)
 
+def bits_to_bytes(count, suffix):
+	if suffix == "B":
+		# Input value already in bytes; not converting
+		return count
+	else:
+		return int(float(count)/float(8))
+
+def bytes_to_bits(count, suffix):
+	if suffix == "b":
+		# Input value already in bits; not converting
+		return count
+	else:
+		return count * 8
+
 def main(argv):
 	user_input = None
+	scale = None
 	try:
-		opts, args = getopt.getopt(argv, "hp:s:", ["help", "prefixed=", "simple="])
+		opts, args = getopt.getopt(argv, "hbBp:s:", ["help", "bits", "bytes", "prefixed=", "simple="])
 	except getopt.GetoptError:
 		usage()
 		sys.exit(127)
@@ -119,6 +134,10 @@ def main(argv):
 	for opt, arg in opts:
 		if opt in ("-h", "--help"):
 			usage()
+		elif opt in ("-b", "--bits"):
+			scale = "to_bits"
+		elif opt in ("-B", "--bytes"):
+			scale = "to_bytes"
 		elif opt in ("-p", "--prefixed"):
 			direction = "simple_to_prefixed"
 			user_input = arg
@@ -140,8 +159,7 @@ def main(argv):
 		except getopt.GetoptError:
 			usage()
 			sys.exit(127)
-		result = convert_to_prefixed(int(input[0]))
-		print str(result[0]) + str(result[1])
+		converted = convert_to_prefixed(int(input[0]))
 	elif direction == "prefixed_to_simple":
 		try:
 			int(input[0])
@@ -149,11 +167,22 @@ def main(argv):
 		except getopt.GetoptError:
 			usage()
 			sys.exit(127)
-		result = convert_to_simple(int(input[0]), input[1])
-		print str(result)
+		converted = (convert_to_simple(int(input[0]), input[1]), "")
 	else:
 		print "Must specify either direction of conversion as either --prefixed or --simple"
 		usage()
+	
+	if scale == "to_bits":
+		result = (bytes_to_bits(converted[0], input[2]), converted[1], "b")
+	elif scale == "to_bytes":
+		result = (bits_to_bytes(converted[0], input[2]), converted[1], "B")
+	else:
+		result = (converted[0], converted[1], input[2])
+	
+	if result[2] is not None:
+		print str(result[0]) + str(result[1]) + str(result[2])
+	else:
+		print str(result[0]) + str(result[1])
 	
 if __name__ == "__main__":
 	sys.exit(main(sys.argv[1:]))
