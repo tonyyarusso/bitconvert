@@ -116,14 +116,14 @@ def bits_to_bytes(count, suffix):
 		# Input value already in bytes; not converting
 		return count
 	else:
-		return int(float(count)/float(8))
+		return round(float(count)/float(8), 1)
 
 def bytes_to_bits(count, suffix):
 	if suffix == "b":
 		# Input value already in bits; not converting
-		return count
+		return int(count)
 	else:
-		return count * 8
+		return int(count * 8)
 
 def main(argv):
 	user_input = None
@@ -158,28 +158,28 @@ def main(argv):
 		usage()
 	
 	if scale == "to_bits":
-		adj_input = (bytes_to_bits(int(input[0]), input[2]), input[1], "b")
+		adj_input = (bytes_to_bits(float(input[0]), input[2]), input[1], "b")
 	elif scale == "to_bytes":
-		adj_input = (bits_to_bytes(int(input[0]), input[2]), input[1], "B")
+		adj_input = (bits_to_bytes(float(input[0]), input[2]), input[1], "B")
 	else:
-		adj_input = (int(input[0]), input[1], input[2])
+		adj_input = (float(input[0]), input[1], input[2])
 	
 	if direction == "simple_to_prefixed":
 		try:
-			int(adj_input[0])
+			float(adj_input[0])
 		except getopt.GetoptError:
 			usage()
 			sys.exit(127)
-		converted = convert_to_prefixed(convert_to_simple(int(adj_input[0]), adj_input[1]))
+		converted = convert_to_prefixed(convert_to_simple(float(adj_input[0]), adj_input[1]))
 		converted.extend([adj_input[2]])
 	elif direction == "prefixed_to_simple":
 		try:
-			int(adj_input[0])
+			float(adj_input[0])
 			str(adj_input[1])
 		except getopt.GetoptError:
 			usage()
 			sys.exit(127)
-		converted = [convert_to_simple(int(adj_input[0]), adj_input[1]), "", adj_input[2]]
+		converted = [convert_to_simple(float(adj_input[0]), adj_input[1]), "", adj_input[2]]
 	else:
 		print "Must specify either direction of conversion as either --prefixed or --simple"
 		usage()
