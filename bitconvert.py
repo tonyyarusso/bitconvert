@@ -8,7 +8,7 @@
 # Description: A simple script to convert bit or byte values between simple unprefixed numbers and
 #              human-readable prefixed forms (eg. 235235235B vs 224.3MB)
 #
-# Usage: bitconvert.py -p|-s <value>
+# Usage: bitconvert.py -p|-s <value> [-b|-B]
 # e.g. bitconvert.py -p 235235235
 #
 # ----------------------------------------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ def usage():
 	print "License:      BSD 3-clause"
 	print "              <http://opensource.org/licenses/BSD-3-Clause>"
 	print ""
-	print "Usage: bitconvert.py -p|-s <value>"
+	print "Usage: bitconvert.py -p|-s <value> [-b|-B]"
 	print "e.g. bitconvert.py -p 235235235"
 	print ""
 	print "Options:"
@@ -63,6 +63,10 @@ def usage():
 	print "       Convert from simple input to prefixed human-readable output"
 	print " -s, --simple"
 	print "       Convert from prefixed human-readable input to simple output"
+	print " -b, --bits"
+	print "       Convert from bytes to bits"
+	print " -B, --bytes"
+	print "       Convert from bits to bytes"
 	sys.exit(0)
 
 def convert_to_prefixed(count):
