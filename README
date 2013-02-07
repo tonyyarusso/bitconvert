@@ -1,0 +1,20 @@
+Name:         Basic bit/byte converter
+Description:  A simple script to convert bit or byte values
+              between simple unprefixed numbers and
+              human-readable prefixed forms
+              (eg. 235235235 vs 224.3M)
+Author:       Tony Yarusso <tonyyarusso@gmail.com>
+Copyright:    2013, Tony Yarusso
+License:      BSD 3-clause
+              <http://opensource.org/licenses/BSD-3-Clause>
+
+Usage: bitconvert.py -p|-s <value>
+e.g. bitconvert.py -p 235235235
+
+Options:
+ -h, --help
+       Print help screen
+ -p, --prefixed
+       Convert from simple input to prefixed human-readable output
+ -s, --simple
+       Convert from prefixed human-readable input to simple output
