@@ -8,7 +8,7 @@ Copyright:    2013, Tony Yarusso
 License:      BSD 3-clause
               <http://opensource.org/licenses/BSD-3-Clause>
 
-Usage: bitconvert.py -p|-s <value>
+Usage: bitconvert.py -p|-s <value> [-b|-B]
 e.g. bitconvert.py -p 235235235
 
 Options:
@@ -18,3 +18,7 @@ Options:
        Convert from simple input to prefixed human-readable output
  -s, --simple
        Convert from prefixed human-readable input to simple output
+ -b, --bits
+       Convert from bytes to bits
+ -B, --bytes
+       Convert from bits to bytes
