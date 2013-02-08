@@ -40,7 +40,7 @@
 
 import getopt, re, sys
 
-bitpattern = re.compile(r'^(\d*\.?\d+)(K|k|M|m|G|g|T|t|P|p|E|e)?(b|B)?$')
+bitpattern = re.compile(r'^(\d*\.?\d+)(K|k|M|m|G|g|T|t|P|p|E|e)?(b|B)?(.*)$')
 
 def usage():
 	print "Name:         Basic bit/byte converter"
@@ -74,22 +74,22 @@ def convert_to_prefixed(count):
 		num_part = count
 		prefix = ""
 	elif count < 1048576:
-		num_part = round(float(count)/float(1024), 1)
+		num_part = float(count)/float(1024)
 		prefix = "K"
 	elif count < 1073741824:
-		num_part = round(float(count)/float(1048576), 1)
+		num_part = float(count)/float(1048576)
 		prefix = "M"
 	elif count < 1099511627776:
-		num_part = round(float(count)/float(1073741824), 1)
+		num_part = float(count)/float(1073741824)
 		prefix = "G"
 	elif count < 1125899906842624:
-		num_part = round(float(count)/float(1099511627776), 1)
+		num_part = float(count)/float(1099511627776)
 		prefix = "T"
 	elif count < 11592921504606846976:
-		num_part = round(float(count)/float(1125899906842624), 1)
+		num_part = float(count)/float(1125899906842624)
 		prefix = "P"
 	else:
-		num_part = round(float(count)/float(11592921504606846976), 1)
+		num_part = float(count)/float(11592921504606846976)
 		prefix = "E"
 	return [num_part, prefix]
 
@@ -116,14 +116,14 @@ def bits_to_bytes(count, suffix):
 		# Input value already in bytes; not converting
 		return count
 	else:
-		return round(float(count)/float(8), 1)
+		return float(count)/float(8)
 
 def bytes_to_bits(count, suffix):
 	if suffix == "b":
 		# Input value already in bits; not converting
-		return int(count)
+		return count
 	else:
-		return int(count * 8)
+		return count * 8
 
 def main(argv):
 	user_input = None
@@ -184,10 +184,15 @@ def main(argv):
 		print "Must specify either direction of conversion as either --prefixed or --simple"
 		usage()
 	
-	if converted[2] is not None:
-		print str(converted[0]) + str(converted[1]) + str(converted[2])
+	if input[3]:
+		converted.extend([input[3]])
 	else:
-		print str(converted[0]) + str(converted[1])
+		converted.extend([""])
+	
+	if converted[2] is not None:
+		print str(round(converted[0], 1)) + str(converted[1]) + str(converted[2]) + str(converted[3])
+	else:
+		print str(round(converted[0], 1)) + str(converted[1]) + str(converted[3])
 	
 if __name__ == "__main__":
 	sys.exit(main(sys.argv[1:]))
