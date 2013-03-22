@@ -190,9 +190,12 @@ def main(argv):
 		converted.extend([""])
 	
 	if converted[2] is not None:
-		print str(round(converted[0], 1)) + str(converted[1]) + str(converted[2]) + str(converted[3])
+		result = str(round(converted[0], 1)) + str(converted[1]) + str(converted[2]) + str(converted[3])
 	else:
-		print str(round(converted[0], 1)) + str(converted[1]) + str(converted[3])
+		result = str(round(converted[0], 1)) + str(converted[1]) + str(converted[3])
+
+	return result
 	
 if __name__ == "__main__":
-	sys.exit(main(sys.argv[1:]))
+	result = sys.exit(main(sys.argv[1:]))
+	print result
